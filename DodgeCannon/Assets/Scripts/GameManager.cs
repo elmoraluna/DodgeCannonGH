@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
     public GameObject powerUpCon;
     private Transform firePoint;
     public Transform centerPosition;
+    public Image image;
+    public Button restart;
+    public Button menu;
+    public Image powerUpBackground;
+    public Text powerUpText;
+    public Singleplayer endBackground;
     public Text segundos;
     public AudioClip endOfGame;
     private AudioSource audiosource;
@@ -47,6 +53,8 @@ public class GameManager : MonoBehaviour
     public bool powerUpSpawned = false;
     public float cannonForce;
     private bool plusMinusForce = false;
+    private bool endGameEntrance = true;
+    public float duracionPowerUp = 15f;
 
     enum Difficulty
     {
@@ -106,9 +114,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            audiosource.loop = false;
-            audiosource.clip = endOfGame;
-            audiosource.Play();
+            if (endGameEntrance)
+            {
+                audiosource.loop = false;
+                audiosource.clip = endOfGame;
+                audiosource.Play();
+                endGameEntrance = false;
+                Invoke("EndOfGame", 3f);
+            }
+            
         }
         /*if (Input.GetKey(KeyCode.R))
         {
@@ -124,6 +138,15 @@ public class GameManager : MonoBehaviour
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             Destroy(cannon, 1.5f);
         }*/
+    }
+
+    public void EndOfGame()
+    {
+        endGameEntrance = false;
+        image.gameObject.SetActive(false);
+        restart.gameObject.SetActive(false);
+        menu.gameObject.SetActive(false);
+        endBackground.Setup(tiempo);
     }
     
     private void Awake()
@@ -204,7 +227,10 @@ public class GameManager : MonoBehaviour
     public void SetDifficultyEasy()
     {
         dificultad = Difficulty.EASY;
-        Invoke("SetDifficultyNormal", 15f);
+        powerUpBackground.gameObject.SetActive(true);
+        powerUpText.text = "Dificultad fácil";
+        Invoke("HidePowerUpText", 3f);
+        Invoke("SetDifficultyNormal", duracionPowerUp);
     }
 
     public void SetDifficultyNormal()
@@ -212,12 +238,18 @@ public class GameManager : MonoBehaviour
         dificultad = Difficulty.NORMAL;
         siguientePowerUp = tiempo + Random.Range(10, 20);
         isPowerUpActive = false;
+        powerUpBackground.gameObject.SetActive(true);
+        powerUpText.text = "Dificultad normal";
+        Invoke("HidePowerUpText", 3f);
     }
 
     public void SetDifficultyHard()
     {
         dificultad = Difficulty.HARD;
-        Invoke("SetDifficultyNormal", 15f);
+        powerUpBackground.gameObject.SetActive(true);
+        powerUpText.text = "Dificultad difícil";
+        Invoke("HidePowerUpText", 3f);
+        Invoke("SetDifficultyNormal", duracionPowerUp);
     }
 
     private Vector3 PowerUpLocation(float distancia)
@@ -240,6 +272,9 @@ public class GameManager : MonoBehaviour
         {
             cannonForce /= 0.75f;
         }
+        powerUpBackground.gameObject.SetActive(true);
+        powerUpText.text = "Velocidad normal";
+        Invoke("HidePowerUpText", 3f);
         siguientePowerUp = tiempo + Random.Range(10, 20);
         isPowerUpActive = false;
     }
@@ -248,13 +283,24 @@ public class GameManager : MonoBehaviour
     {
         plusMinusForce = true;
         cannonForce *= 1.5f;
-        Invoke("NormalForce", 15f);
+        powerUpBackground.gameObject.SetActive(true);
+        powerUpText.text = "Balas de cañón más veloces";
+        Invoke("HidePowerUpText", 3f);
+        Invoke("NormalForce", duracionPowerUp);
     }
 
     public void MinusForce()
     {
         plusMinusForce = false;
         cannonForce *= 0.75f;
-        Invoke("NormalForce", 15f);
+        powerUpBackground.gameObject.SetActive(true);
+        powerUpText.text = "Balas de cañón más lentas";
+        Invoke("HidePowerUpText", 3f);
+        Invoke("NormalForce", duracionPowerUp);
+    }
+
+    public void HidePowerUpText()
+    {
+        powerUpBackground.gameObject.SetActive(false);
     }
 }
