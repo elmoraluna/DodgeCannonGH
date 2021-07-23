@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1225303255261042303}
   - component: {fileID: 4429453570958645812}
-  - component: {fileID: 9211556026615742438}
+  - component: {fileID: 4610602171387231822}
   m_Layer: 7
   m_Name: PowerUpPro
   m_TagString: Untagged
@@ -46,7 +46,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8198986, y: 0.29317093, z: 0.90856934}
   m_Center: {x: 0.026137352, y: 0.13507724, z: -0.040567398}
---- !u!114 &9211556026615742438
+--- !u!114 &4610602171387231822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
